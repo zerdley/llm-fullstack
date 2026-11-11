@@ -20,3 +20,7 @@ def test_generate(client):
         )
     assert response.status_code == 200
     assert response.text == "prompt" + ("test" * 5)
+
+def test_health(client):
+    response = client.get("/health")
+    assert response.json() == {"status": "ok"}
