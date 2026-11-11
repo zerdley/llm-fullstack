@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import AsyncIterable
 
-from app.models import Prompt
+from app.schemas import Prompt
 
 class Base(ABC):
     @abstractmethod

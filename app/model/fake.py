@@ -2,7 +2,7 @@ import asyncio
 import random
 from typing import AsyncIterable
 from app.model.base import Base
-from app.models import Prompt
+from app.schemas import Prompt
 
 class FakeModel(Base):
     async def generate(self, prompt: Prompt) -> AsyncIterable[str]:
