@@ -1,24 +1,17 @@
-from typing import AsyncIterable
-
 import pytest
-from app.dependencies import get_model
-from app.model.base import Base
-from app.schemas import Prompt
+from app.dependencies import get_generate_request_logger, get_model
 from fastapi.testclient import TestClient
 from app.main import app
-
-def get_test_model():
-    return StubModel()
-
-class StubModel(Base):
-    async def generate(self, prompt: Prompt) -> AsyncIterable[str]:
-        yield prompt.prompt
-        for _ in range(prompt.max_tokens):
-            yield "test"
+from tests.fakes import GenerateRequestSpy, get_test_model
 
 @pytest.fixture
-def client():
+def generate_request_spy() -> GenerateRequestSpy:
+    return GenerateRequestSpy()
+
+@pytest.fixture
+def client(generate_request_spy):
     client = TestClient(app)
     app.dependency_overrides[get_model] = get_test_model
+    app.dependency_overrides[get_generate_request_logger] = lambda: generate_request_spy
     yield client
     app.dependency_overrides.clear()
