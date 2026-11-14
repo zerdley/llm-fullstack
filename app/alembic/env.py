@@ -1,13 +1,11 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 from app.config import settings
-from app.db.tables import GenerateRequest
+from app.db.tables import GenerateRequest  # noqa: F401
 
 config = context.config
 
@@ -58,12 +56,13 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
-        url = url
+        url=url,
     )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata,
+            connection=connection,
+            target_metadata=target_metadata,
         )
 
         with context.begin_transaction():
